@@ -1,0 +1,11 @@
+# Use Node.js 20.11.1 on Alpine Linux 3.18 as the base image
+FROM node:20.11.1-alpine3.18
+
+# Install Angular CLI globally
+RUN npm install -g @angular/cli@17.1.2
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Expose the port the app runs on
+EXPOSE 4200

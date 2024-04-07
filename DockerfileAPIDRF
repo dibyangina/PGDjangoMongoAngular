@@ -1,0 +1,13 @@
+# Use the official Python image from Docker Hub
+FROM python:3.11.8
+
+# Set environment variables for Python
+ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE 1
+
+# Set the working directory in the container
+WORKDIR /code
+
+# Expose the port the app runs on
+EXPOSE 8080
+

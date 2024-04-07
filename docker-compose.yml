@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: sibu-db-postgres:1.0.0
+    container_name: sibudbpostgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - ./DBPostgres/PostgresDataDB:/var/lib/postgresql/data/pgdata
+    environment:
+      POSTGRES_USER: sibu
+      POSTGRES_PASSWORD: sibu
+      POSTGRES_DB: sibu
+    networks:
+      - sibu
+  mongo:
+    image: sibu-db-mongo:1.0.0
+    container_name: sibudbmongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./DBMongo/MongoDataDB:/data/db
+    #command: mongod --bind_ip 0.0.0.0,host.docker.internal
+    command: mongod --bind_ip_all      
+    networks:
+      - sibu
+  drf:
+    image: sibu-api-drf:1.0.0
+    container_name: sibuapidrf    
+    ports:
+      - "8080:8080"
+      - "5678:5678"
+    volumes:
+      - type: bind
+        source: ./APIDRF
+        target: /code
+      - type: bind
+        source: ./DBPostgres/PostgresSourceCode
+        target: /pgcode
+    networks:
+      - sibu
+    depends_on:
+      - postgres
+      - mongo        
+    command: 
+      - sh
+      - -c
+      - |
+        pip install --upgrade pip \
+        && pip install pipenv \
+        && pip install -r APIDRFRequirement.txt \
+        && tail -f /dev/null
+        # && python -m debugpy --listen 0.0.0.0:5678 manage.py runserver 0.0.0.0:8080
+        # && tail -f /dev/null
+        # && python manage.py runserver 0.0.0.0:8080
+  angular:
+    image: sibu-ui-angular:1.0.0
+    container_name: sibuuiangular
+    ports:
+      - "4200:4200"
+    volumes:
+      - type: bind
+        source: ./UIAngular
+        target: /app
+    networks:
+      - sibu
+    command: 
+      - sh
+      - -c
+      - |
+        npm install \
+        && ng serve --host 0.0.0.0
+
+networks:
+  sibu:
+    driver: bridge

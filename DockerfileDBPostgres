@@ -1,0 +1,13 @@
+# Use the official Python image from Docker Hub
+FROM postgres:16.2
+
+# Set environment variables
+ENV POSTGRES_USER=sibu
+ENV POSTGRES_PASSWORD=sibu
+ENV POSTGRES_DB=sibu
+
+# Set the location where PostgreSQL data will be stored inside the container
+ENV PGDATA /var/lib/postgresql/data/pgdata
+
+# Expose the PostgreSQL port
+EXPOSE 5432

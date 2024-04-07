@@ -1,0 +1,9 @@
+# Use the official MongoDB Community Server image from Docker Hub
+FROM mongo:7.0.6
+
+
+# Create a directory for MongoDB data
+RUN mkdir -p /data/db
+
+# Expose port
+EXPOSE 27017
